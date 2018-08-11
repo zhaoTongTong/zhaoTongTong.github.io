@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="webpack loader," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Webpack LoaderLoader 的概念上面这张图大家应该都十分熟悉了，正如 webpack 官网中对其功能进行的介绍和宣传，它将所有的文件都视作一个模块，通过特定的加载方式可以把它们统一转化成浏览器支持的文件类型。那么实现这个转化过程的工具就是 Loader 。">
+<meta name="keywords" content="webpack loader">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Webpack Loader小结">
+<meta property="og:url" content="http://yoursite.com/2018/06/10/loader/index.html">
+<meta property="og:site_name" content="姑凉是程序媛">
+<meta property="og:description" content="Webpack LoaderLoader 的概念上面这张图大家应该都十分熟悉了，正如 webpack 官网中对其功能进行的介绍和宣传，它将所有的文件都视作一个模块，通过特定的加载方式可以把它们统一转化成浏览器支持的文件类型。那么实现这个转化过程的工具就是 Loader 。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/1/25/1612c43c7609c69d?w=1083&h=420&f=png&s=51464">
+<meta property="og:updated_time" content="2018-06-28T02:22:35.176Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Webpack Loader小结">
+<meta name="twitter:description" content="Webpack LoaderLoader 的概念上面这张图大家应该都十分熟悉了，正如 webpack 官网中对其功能进行的介绍和宣传，它将所有的文件都视作一个模块，通过特定的加载方式可以把它们统一转化成浏览器支持的文件类型。那么实现这个转化过程的工具就是 Loader 。">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2018/1/25/1612c43c7609c69d?w=1083&h=420&f=png&s=51464">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/10/loader/"/>
+
+
+
+
+
+  <title>Webpack Loader小结 | 姑凉是程序媛</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">姑凉是程序媛</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/10/loader/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ztt">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="姑凉是程序媛">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Webpack Loader小结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-10T23:19:32+08:00">
+                2018-06-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Webpack-Loader"><a href="#Webpack-Loader" class="headerlink" title="Webpack Loader"></a>Webpack Loader</h1><h3 id="Loader-的概念"><a href="#Loader-的概念" class="headerlink" title="Loader 的概念"></a>Loader 的概念</h3><p><img src="https://user-gold-cdn.xitu.io/2018/1/25/1612c43c7609c69d?w=1083&amp;h=420&amp;f=png&amp;s=51464" alt="webpack"><br>上面这张图大家应该都十分熟悉了，正如 webpack 官网中对其功能进行的介绍和宣传，它将所有的文件都视作一个模块，通过特定的加载方式可以把它们统一转化成浏览器支持的文件类型。那么实现这个转化过程的工具就是 Loader 。</p>
+<a id="more"></a>
+<p>Loader 从本质上来说，就是一个 node 模块，在 webpack 定义中，Loader 导出一个函数，Loader 会在转换源模块（resource）的时候调用该函数。在这个函数内部，我们可以通过传入 this 上下文给 Loader API 来使用它们。通过 Loader 处理后的源模块返回给下一个 Loader 进行链式处理。</p>
+<h3 id="Loader-的规则"><a href="#Loader-的规则" class="headerlink" title="Loader 的规则"></a>Loader 的规则</h3><p>一个 Loader 的职责是单一的，只需完成一种转换。如果一个源文件需要经历多步转换才能正常使用，就通过多个 Loader 去转换。</p>
+<p>在调用多个 Loader 去转换一个文件时，每个 Loader 会链式的顺序执行，执行顺序是<strong>从右往左</strong>，第一个 Loader 将会拿到需处理模块的原内容，上一个 Loader 处理后的结果会传给下一个接着处理，最后的 Loader 将处理后的最终结果返回给 Webpack 的 require 方法。</p>
+<p>如下例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.scss/</span>,</span><br><span class="line">        <span class="comment">// SCSS 文件的处理顺序为先 sass-loader 再 css-loader 再 style-loader</span></span><br><span class="line">        use: [</span><br><span class="line">          <span class="string">'style-loader'</span>,</span><br><span class="line">          &#123;</span><br><span class="line">            loader:<span class="string">'css-loader'</span>,</span><br><span class="line">            <span class="comment">// 给 css-loader 传入配置项</span></span><br><span class="line">            options:&#123;</span><br><span class="line">              minimize:<span class="literal">true</span>, </span><br><span class="line">            &#125;</span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="string">'sass-loader'</span>],</span><br><span class="line">      &#125;,</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>所有的 .scss 文件都会经过三个 Loader 的处理，处理顺序是 sass-loader -&gt; css-loader -&gt; style-loader。</p>
+<p>所以，在开发一个 Loader 时，应该保持其职责的单一性，你只需关心输入和输出。</p>
+<h3 id="Loader-的配置"><a href="#Loader-的配置" class="headerlink" title="Loader 的配置"></a>Loader 的配置</h3><p>Loader 是在 webpack 中使用，所以需要在 webpack 的 config 文件中进行配置。</p>
+<h4 id="单个-Loader-的配置"><a href="#单个-Loader-的配置" class="headerlink" title="单个 Loader 的配置"></a>单个 Loader 的配置</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [&#123;</span><br><span class="line">		test: <span class="regexp">/\.vue$/</span>,</span><br><span class="line">		loader: <span class="string">'vue-loader'</span></span><br><span class="line">	&#125;, &#123;</span><br><span class="line">		test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">    	use: [&#123;</span><br><span class="line">        	loader: <span class="string">'babel-loader'</span>, </span><br><span class="line">        	options: &#123;<span class="comment">/* ... */</span>&#125;</span><br><span class="line">    	&#125;]</span><br><span class="line">	&#125;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="多个-Loader-的配置"><a href="#多个-Loader-的配置" class="headerlink" title="多个 Loader 的配置"></a>多个 Loader 的配置</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>: &#123;</span><br><span class="line">	rules: [&#123;</span><br><span class="line">    	test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">    	use: [&#123;</span><br><span class="line">        	loader: <span class="string">'a-loader'</span>, </span><br><span class="line">        	options: &#123;<span class="comment">/* ... */</span>&#125;</span><br><span class="line">    	&#125;, &#123;</span><br><span class="line">        	loader: <span class="string">'b-loader'</span>, </span><br><span class="line">        	options: &#123;<span class="comment">/* ... */</span>&#125;</span><br><span class="line">    	&#125;]</span><br><span class="line">	&#125;]</span><br><span class="line">&#125;,</span><br><span class="line">resolveLoader: &#123;</span><br><span class="line">	<span class="comment">// 告诉 webpack 该去那个目录下找 loader 模块</span></span><br><span class="line">	modules: [<span class="string">'node_modules'</span>, path.resolve(__dirname, <span class="string">'./src/loaders'</span>)]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的 <strong>resolveLoader</strong> 属性的作用是指定 Loader 模块所在的目录，一般的 npm 安装的 loader 都在 node_modules 中，但自己按需开发的 loader 目录需手动指定。</p>
+<h4 id="内联方式配置"><a href="#内联方式配置" class="headerlink" title="内联方式配置"></a>内联方式配置</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> styles <span class="keyword">from</span> <span class="string">'style-loader!css-loader!./styles.css'</span>;</span><br></pre></td></tr></table></figure>
+<p>通过在 import 文件前添加链式的 loader 名称，用!分割，同样会从右往左依次处理该文件。</p>
+<h3 id="Loader-开发基础"><a href="#Loader-开发基础" class="headerlink" title="Loader 开发基础"></a>Loader 开发基础</h3><p>了解完了 Loader 的一些基础概念后，就可以上手自己写一个适用于项目的 Loader 了。</p>
+<p>由于 Webpack 是运行在 Node.js 之上的，一个 Loader 其实就是一个 Node.js 模块，这个模块需要导出一个函数。这个导出的函数的工作就是获得处理前的原内容，对原内容执行处理后，返回处理后的内容。</p>
+<p>如下是一个最简单的 Loader：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">source</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// source 为 compiler 传递给 Loader 的一个文件的原内容</span></span><br><span class="line">  <span class="keyword">return</span> source;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>既然是在 node.js 中运行，那么就可以调用 node.js 的一些 api 和第三方模块来进行数据处理：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> sass = <span class="built_in">require</span>(<span class="string">'node-sass'</span>);</span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">source</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> sass(source);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="Loader-开发进阶"><a href="#Loader-开发进阶" class="headerlink" title="Loader 开发进阶"></a>Loader 开发进阶</h3><h4 id="获取-Loader-的-options"><a href="#获取-Loader-的-options" class="headerlink" title="获取 Loader 的 options"></a>获取 Loader 的 options</h4><p>上面的例子中可以看到，在 webpack 中配置 Loader 时，可以给其传递参数 options，那么在 Loader 执行过程中怎么取得这些参数呢？</p>
+<p>Webpack 提供了一个 <strong>‘loader-utils’</strong> api工具模块供 Loader 开发者来调用，其中有一个 getOptions 方法即可拿到参数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loaderUtils = <span class="built_in">require</span>(<span class="string">'loader-utils'</span>);</span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">source</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 获取到用户给当前 Loader 传入的 options</span></span><br><span class="line">  <span class="keyword">const</span> options = loaderUtils.getOptions(<span class="keyword">this</span>);</span><br><span class="line">  <span class="keyword">return</span> source;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这个 <strong>loader-utils</strong> 库还提供了一些其他的 API，可以自行查看。</p>
+<h4 id="添加其他返回值"><a href="#添加其他返回值" class="headerlink" title="添加其他返回值"></a>添加其他返回值</h4><p>上面提到的 Loader 都只是简单的返回了通过 Loader 转换后的内容，但是如果除了这个内容外还需要返回其他参数的话，可以使用 webpack 提供的 <strong>callback</strong> API来实现：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">source</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 通过 this.callback 告诉 Webpack 返回的结果</span></span><br><span class="line">  <span class="keyword">this</span>.callback(<span class="literal">null</span>, source, sourceMaps);</span><br><span class="line">  <span class="comment">// 当你使用 this.callback 返回内容时，该 Loader 必须返回 undefined</span></span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><figcaption><span>是 webpack 给 Loader 注入的 API，以方便 Loader 和 Webpack 之间通信。用法如下：</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">```js</span><br><span class="line">this.callback(</span><br><span class="line">    // 当无法转换原内容时，给 Webpack 返回一个 Error</span><br><span class="line">    err: Error | null,</span><br><span class="line">    // 原内容转换后的内容</span><br><span class="line">    content: string | Buffer,</span><br><span class="line">    // 用于把转换后的内容得出原内容的 SourceMap，方便调试</span><br><span class="line">    sourceMap?: SourceMap,</span><br><span class="line">    // 如果本次转换为原内容生成了 AST 语法树，可以把这个 AST 返回，</span><br><span class="line">    // 以方便之后需要 AST 的 Loader 复用该 AST，以避免重复生成 AST，提升性能</span><br><span class="line">    abstractSyntaxTree?: AST</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<h4 id="同步-Loader-和异步-Loader"><a href="#同步-Loader-和异步-Loader" class="headerlink" title="同步 Loader 和异步 Loader"></a>同步 Loader 和异步 Loader</h4><p>Loader 有同步和异步之分，上面介绍的 Loader 都是同步的 Loader，它们的转换过程都是同步的，转换完成之后再返回结果。</p>
+<p>但是如果你的某个转换需要发送网络请求后才能得到结果，那么如果还使用同步的 Loader 整个打包过程就会阻塞变得很慢。所以 webpack 提供了这种方式来实现异步的 Loader：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">source</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 告诉 Webpack 本次转换是异步的，Loader 会在 callback 中回调结果</span></span><br><span class="line">    <span class="keyword">var</span> callback = <span class="keyword">this</span>.async();</span><br><span class="line">    someAsyncOperation(source, <span class="function"><span class="keyword">function</span>(<span class="params">err, result, sourceMaps, ast</span>) </span>&#123;</span><br><span class="line">        <span class="comment">// 通过 callback 返回异步执行后的结果</span></span><br><span class="line">        callback(err, result, sourceMaps, ast);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="利用缓存"><a href="#利用缓存" class="headerlink" title="利用缓存"></a>利用缓存</h4><p>在有些情况下，有些转换操作需要大量计算非常耗时，如果每次构建都重新执行重复的转换操作，构建将会变得非常缓慢。<br>为此，Webpack 会默认缓存所有 Loader 的处理结果，在需要被处理的文件或者其依赖的文件没有发生变化时，<br>不会重新调用对应的 Loader 去执行转换操作的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">source</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.cacheable();</span><br><span class="line">  <span class="comment">//this.cacheable(false); 关闭缓存</span></span><br><span class="line">  <span class="keyword">return</span> source;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="其他常用API"><a href="#其他常用API" class="headerlink" title="其他常用API"></a>其他常用API</h4><ul>
+<li>this.context：当前处理文件的所在目录，假如当前 Loader 处理的文件是 /src/main.js，则 this.context 就等于 /src。</li>
+<li>this.resource：当前处理文件的完整请求路径，例如 /src/main.js?name=1。</li>
+<li>this.resourcePath：当前处理文件的路径，例如 /src/main.js</li>
+<li>this.addDependency：给当前处理文件添加其依赖的文件，以便再其依赖的文件发生变化时，会重新调用 Loader 处理该文件。使用方法为 addDependency(file: string)。<br><a href="https://webpack.js.org/api/loaders/" target="_blank" rel="noopener">loaders api</a></li>
+</ul>
+<h3 id="Loader开发实例"><a href="#Loader开发实例" class="headerlink" title="Loader开发实例"></a>Loader开发实例</h3><p>由于自己的坏习惯，最近项目中对于类的命名十分不规范，时而使用驼峰命名，时而使用连字符命名；为了统一规范成连字符命名，并且减小工作量，编写了一个处理 .vue 文件类名的 Loader，来把所有的驼峰类名变成连字符。下面来看一下具体的开发和使用方式。</p>
+<p><strong>src/loader/class-format-loader.js:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">source</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> _outstr = <span class="string">''</span>;</span><br><span class="line">  _outstr = source.replace(<span class="regexp">/(class=[\'|\"])([a-zA-Z0-9_]+)([\'|\"])/g</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;	<span class="comment">//匹配所有html中的驼峰类名并转化成连字符</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">arguments</span>[<span class="number">1</span>] + <span class="built_in">arguments</span>[<span class="number">2</span>].replace(<span class="regexp">/([a-z\d])([A-Z])/g</span>, <span class="string">'$1-$2'</span>).toLowerCase() + <span class="built_in">arguments</span>[<span class="number">3</span>]</span><br><span class="line">  &#125;);</span><br><span class="line">  _outstr = _outstr.replace(<span class="regexp">/(^&lt;style)(.+)(style&gt;$)/</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;		<span class="comment">//匹配所有&lt;style&gt;中的驼峰类名并转化成连字符</span></span><br><span class="line">  	<span class="keyword">return</span> <span class="built_in">arguments</span>[<span class="number">1</span>] + <span class="built_in">arguments</span>[<span class="number">2</span>].replace(<span class="regexp">/(\.)([a-zA-Z0-9_]+)/g</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    	<span class="keyword">return</span> <span class="built_in">arguments</span>[<span class="number">1</span>] + <span class="built_in">arguments</span>[<span class="number">2</span>].replace(<span class="regexp">/([a-z\d])([A-Z])/g</span>, <span class="string">'$1-$2'</span>).toLowerCase();</span><br><span class="line">  	&#125;) + <span class="built_in">arguments</span>[<span class="number">3</span>];</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">return</span> _outstr;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>通过正则表达式匹配<template>中的class，并将其转换成连字符形式，然后再匹配<style>中的 .className 并转换来实现。</p>
+<p>在 webpack 的配置文件中如下使用该 Loader:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">        &#123;</span><br><span class="line">            test: <span class="regexp">/\.vue$/</span>,</span><br><span class="line">            use: [&#123;</span><br><span class="line">              loader: <span class="string">'vue-loader'</span>,</span><br><span class="line">              options: vueLoaderConfig</span><br><span class="line">            &#125;, <span class="string">'class-format-loader'</span>]</span><br><span class="line">        &#125;,</span><br><span class="line">    ...</span><br><span class="line">    ]</span><br><span class="line">&#125;,</span><br><span class="line">resolveLoader: &#123;</span><br><span class="line">    modules: [<span class="string">'node_modules'</span>, path.resolve(__dirname, <span class="string">'../src/loader'</span>)]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</style></template></p>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/webpack-loader/" rel="tag"># webpack loader</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/02/React相关分享/" rel="next" title="React相关分享">
+                <i class="fa fa-chevron-left"></i> React相关分享
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Ztt</p>
+              <p class="site-description motion-element" itemprop="description">记录学习成长</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Webpack-Loader"><span class="nav-number">1.</span> <span class="nav-text">Webpack Loader</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Loader-的概念"><span class="nav-number">1.0.1.</span> <span class="nav-text">Loader 的概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Loader-的规则"><span class="nav-number">1.0.2.</span> <span class="nav-text">Loader 的规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Loader-的配置"><span class="nav-number">1.0.3.</span> <span class="nav-text">Loader 的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单个-Loader-的配置"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">单个 Loader 的配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多个-Loader-的配置"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">多个 Loader 的配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内联方式配置"><span class="nav-number">1.0.3.3.</span> <span class="nav-text">内联方式配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Loader-开发基础"><span class="nav-number">1.0.4.</span> <span class="nav-text">Loader 开发基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Loader-开发进阶"><span class="nav-number">1.0.5.</span> <span class="nav-text">Loader 开发进阶</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#获取-Loader-的-options"><span class="nav-number">1.0.5.1.</span> <span class="nav-text">获取 Loader 的 options</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加其他返回值"><span class="nav-number">1.0.5.2.</span> <span class="nav-text">添加其他返回值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#同步-Loader-和异步-Loader"><span class="nav-number">1.0.5.3.</span> <span class="nav-text">同步 Loader 和异步 Loader</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#利用缓存"><span class="nav-number">1.0.5.4.</span> <span class="nav-text">利用缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他常用API"><span class="nav-number">1.0.5.5.</span> <span class="nav-text">其他常用API</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Loader开发实例"><span class="nav-number">1.0.6.</span> <span class="nav-text">Loader开发实例</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ztt</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

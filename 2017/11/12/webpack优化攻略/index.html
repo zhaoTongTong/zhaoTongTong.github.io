@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="webpack," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="webpack相关分享webpack常规配置webpack.config.js： 12345678entry: &quot;./app/entry&quot;,  //单页面单一入口entry: [&quot;./app/entry1&quot;, &quot;./app/entry2&quot;],  //单页面多入口entry: &amp;#123;    //多页面多入口  a: &quot;./app/entry-a&quot;,  b: [&quot;./app/entry-b1&quot;,">
+<meta name="keywords" content="webpack">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack相关分享">
+<meta property="og:url" content="http://yoursite.com/2017/11/12/webpack优化攻略/index.html">
+<meta property="og:site_name" content="姑凉是程序媛">
+<meta property="og:description" content="webpack相关分享webpack常规配置webpack.config.js： 12345678entry: &quot;./app/entry&quot;,  //单页面单一入口entry: [&quot;./app/entry1&quot;, &quot;./app/entry2&quot;],  //单页面多入口entry: &amp;#123;    //多页面多入口  a: &quot;./app/entry-a&quot;,  b: [&quot;./app/entry-b1&quot;,">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/img/2.pic.jpg">
+<meta property="og:image" content="http://yoursite.com/img/6.pic_hd.jpg">
+<meta property="og:image" content="http://yoursite.com/img/7.pic_hd.jpg">
+<meta property="og:image" content="http://yoursite.com/img/8.pic_hd.jpg">
+<meta property="og:updated_time" content="2017-12-07T07:01:35.653Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="webpack相关分享">
+<meta name="twitter:description" content="webpack相关分享webpack常规配置webpack.config.js： 12345678entry: &quot;./app/entry&quot;,  //单页面单一入口entry: [&quot;./app/entry1&quot;, &quot;./app/entry2&quot;],  //单页面多入口entry: &amp;#123;    //多页面多入口  a: &quot;./app/entry-a&quot;,  b: [&quot;./app/entry-b1&quot;,">
+<meta name="twitter:image" content="http://yoursite.com/img/2.pic.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/12/webpack优化攻略/"/>
+
+
+
+
+
+  <title>webpack相关分享 | 姑凉是程序媛</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">姑凉是程序媛</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/12/webpack优化攻略/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ztt">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="姑凉是程序媛">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">webpack相关分享</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-12T14:23:12+08:00">
+                2017-11-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="webpack相关分享"><a href="#webpack相关分享" class="headerlink" title="webpack相关分享"></a>webpack相关分享</h1><h2 id="webpack常规配置"><a href="#webpack常规配置" class="headerlink" title="webpack常规配置"></a>webpack常规配置</h2><p>webpack.config.js：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">entry: <span class="string">"./app/entry"</span>,  <span class="comment">//单页面单一入口</span></span><br><span class="line"></span><br><span class="line">entry: [<span class="string">"./app/entry1"</span>, <span class="string">"./app/entry2"</span>],  <span class="comment">//单页面多入口</span></span><br><span class="line"></span><br><span class="line">entry: &#123;    <span class="comment">//多页面多入口</span></span><br><span class="line">  a: <span class="string">"./app/entry-a"</span>,</span><br><span class="line">  b: [<span class="string">"./app/entry-b1"</span>, <span class="string">"./app/entry-b2"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">output: &#123;</span><br><span class="line">  path: path.resolve(__dirname, <span class="string">"dist"</span>),  <span class="comment">//输出文件的目录路径，必须是绝对路径</span></span><br><span class="line"></span><br><span class="line">  filename: <span class="string">'bundle.js'</span>,  <span class="comment">//单页面输出chunk的文件名</span></span><br><span class="line"></span><br><span class="line">  filename: <span class="string">'[name].js'</span>,  <span class="comment">//多页面输出chunks的文件名模板</span></span><br><span class="line"></span><br><span class="line">  publicPath: process.env.NODE_ENV === <span class="string">'production'</span></span><br><span class="line">    ? config.build.assetsPublicPath</span><br><span class="line">    : config.dev.assetsPublicPath</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">resolve: &#123;</span><br><span class="line">  modules: [   <span class="comment">// 设置查找模块的目录</span></span><br><span class="line">    path.resolve(__dirname, <span class="string">"node_modules"</span>),</span><br><span class="line">    path.resolve(__dirname, <span class="string">"src"</span>)</span><br><span class="line">  ],</span><br><span class="line"></span><br><span class="line">  extensions: [<span class="string">".js"</span>, <span class="string">".vue"</span>, <span class="string">".json"</span>, <span class="string">".css"</span>],     <span class="comment">// 配置省略的扩展名</span></span><br><span class="line"></span><br><span class="line">  alias: &#123;    <span class="comment">// 模块别名列表</span></span><br><span class="line">    <span class="string">'vue$'</span>: <span class="string">'vue/dist/vue.esm.js'</span>,</span><br><span class="line">    <span class="string">'@'</span>: resolve(<span class="string">'src'</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">externals: &#123;</span><br><span class="line">  <span class="string">'react'</span>: <span class="string">'window.React'</span>   <span class="comment">//配置排除依赖，打包时忽略react直接指向外部依赖的window.React变量</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>: &#123;</span><br><span class="line">  rules: [    <span class="comment">//配置模块规则</span></span><br><span class="line">    test: <span class="regexp">/\.js$/</span>,    <span class="comment">//匹配文件正则</span></span><br><span class="line">    loader: <span class="string">'babel-loader'</span>,   <span class="comment">//使用的 loader</span></span><br><span class="line">    include: [resolve(<span class="string">'src'</span>), resolve(<span class="string">'test'</span>)],   <span class="comment">//必须匹配的目录</span></span><br><span class="line">    exclude: resolve(<span class="string">'src/lib'</span>)   <span class="comment">//必须排除的目录</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">plugins: [</span><br><span class="line">  ...根据插件的具体用法配置</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h2 id="webpack优化攻略"><a href="#webpack优化攻略" class="headerlink" title="webpack优化攻略"></a>webpack优化攻略</h2><h3 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h3><p>开发过程中使用最多的方式就是HMR( hot module replacement )，热替换的概念是指 webpack 会监听源代码的修改，当监听文件改变时，会以 json 数据的形式通知客户端进行检查更新，客户端发送请求获取更新后的代码并合并到当前代码中，实现不刷新页面的情况下进行局部更新。</p>
+<h4 id="HMR使用方式"><a href="#HMR使用方式" class="headerlink" title="HMR使用方式"></a>HMR使用方式</h4><p>hmr 的工作流程如图所示：<br><img src="../../../../img/2.pic.jpg" alt="hmr"></p>
+<ul>
+<li>服务器端相关配置 dev-server.js:</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> devMiddleware = <span class="built_in">require</span>(<span class="string">'webpack-dev-middleware'</span>)(compiler, &#123;</span><br><span class="line">  publicPath: webpackConfig.output.publicPath,</span><br><span class="line">  quiet: <span class="literal">true</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> hotMiddleware = <span class="built_in">require</span>(<span class="string">'webpack-hot-middleware'</span>)(compiler, &#123;</span><br><span class="line">  log: <span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.use(devMiddleware)</span><br><span class="line"></span><br><span class="line">app.use(hotMiddleware)</span><br></pre></td></tr></table></figure>
+<p>如上代码安装两个相关的中间件，并配置参数，对应流程图中的 bundle-server 和 hmr-server 。bundle-server 是一个静态服务器，给客户端提供 webpack 打包编译完的文件，hmr-server 是负责跟 hmr runtime 通信的服务器，监听 webpack 的任务点然后通知客户端 runtime 进行更新，runtime 再向静态服务器请求打包好的更新资源插入页面。</p>
+<ul>
+<li>客户端相关配置：webpack.dev.conf.js:</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//将 hmr runtime 嵌入所有入口进行打包</span></span><br><span class="line"><span class="built_in">Object</span>.keys(baseWebpackConfig.entry).forEach(<span class="function"><span class="keyword">function</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  baseWebpackConfig.entry[name] = [<span class="string">'./build/dev-client'</span>].concat(baseWebpackConfig.entry[name])</span><br><span class="line">&#125;)</span><br><span class="line">plugins: [</span><br><span class="line">	...</span><br><span class="line">   	<span class="keyword">new</span> webpack.HotModuleReplacementPlugin(),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>客户端需要将 webpack-hot-middleware/client 文件放进 entry 中进行打包，也就是流程图中的 hmr runtime 嵌入浏览器中。然后再实例化一个热替换插件即可。</p>
+<h4 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h4><ul>
+<li>浏览器端 (hmr runtime) </li>
+</ul>
+<p>client.js:<br><img src="../../../../img/6.pic_hd.jpg" alt="client.js"><br>我们来关注几段重点代码，首先在 init() 中启动了一个EventSource服务器推送事件，然后我们可以看到当接收到服务器推送过来的消息时，执行 handleMessage 函数，这里是把所有的订阅者回调函数遍历执行，其中参数 event 为服务器推送过来的数据。回调函数是通过 return 出去的 addMessageListener 方法进行注册的。可以看到在 connect 函数中注册了一个 handleMessage 回调，该函数判断了服务器推送的数据，如果是一个💗的 unicode 则直接返回，若不是则会调用一个 processMessage 方法。</p>
+<p>这里解释一下💗的作用，由于EventSource是一个 stream 数据流，hmr 有一个判断连接断开的策略，即当前接受消息的时间与上一次的时间间隔20s（默认）以上即为断开，所以为了保持连接，服务器会每10s推送一个💗到浏览器。</p>
+<p>回到刚才的代码，我们发现调用了一个 processMessage 方法，该方法如下图：<br><img src="../../../../img/7.pic_hd.jpg" alt="process"><br>服务器推送的数据进入该函数后，判断 action 字段的值，当值为 built 或 sync 时，在没有错误的情况下会执行 processUpdate 函数，若 action 其他类型则执行自定义的方法（customHandler）。下面进入 processUpdate 里的核心代码看看。<br><img src="../../../../img/8.pic_hd.jpg" alt="processUpdate"><br>这个 check 函数就是客户端向服务端检查模块更新的代码，主要用了module.hot api里的 apply 和 check 方法。此处检查更新后得到更新的模块，如果模块无法被更新则执行 performReload 函数强制刷新页面。如果有可更新的模块，则将从静态服务器上请求来的 js 文件插入页面。至此客户端的流程分析的差不多了。</p>
+<ul>
+<li>服务器端</li>
+</ul>
+<p>webpack-hot-middleware/middleware.js:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 监听webpack的两个任务点并publish相关数据</span></span><br><span class="line">compiler.plugin(<span class="string">"compile"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  latestStats = <span class="literal">null</span>;</span><br><span class="line">  <span class="keyword">if</span> (opts.log) opts.log(<span class="string">"webpack building..."</span>);</span><br><span class="line">  eventStream.publish(&#123;<span class="attr">action</span>: <span class="string">"building"</span>&#125;);</span><br><span class="line">&#125;);</span><br><span class="line">compiler.plugin(<span class="string">"done"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">statsResult</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// Keep hold of latest stats so they can be propagated to new clients</span></span><br><span class="line">  latestStats = statsResult;</span><br><span class="line">  publishStats(<span class="string">"built"</span>, latestStats, eventStream, opts.log);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>在 middleware.js 文件中，主要做的事情就是监听 webpack 的 compile 任务点和 done 任务点。在 webpack 开始编译时，向浏览器端 publish 一个 building action ，在 webpack 编译打包完成时，publish 一个 built action 并将完成的 statsResult 作为参数调用 publishStats 函数，该函数内容如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">publishStats</span>(<span class="params">action, statsResult, eventStream, log</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// For multi-compiler, stats will be an object with a 'children' array of stats</span></span><br><span class="line">  <span class="keyword">var</span> bundles = extractBundles(statsResult.toJson(&#123; <span class="attr">errorDetails</span>: <span class="literal">false</span> &#125;));</span><br><span class="line">  bundles.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">stats</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (log) &#123;</span><br><span class="line">      log(<span class="string">"webpack built "</span> + (stats.name ? stats.name + <span class="string">" "</span> : <span class="string">""</span>) +</span><br><span class="line">        stats.hash + <span class="string">" in "</span> + stats.time + <span class="string">"ms"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    eventStream.publish(&#123;</span><br><span class="line">      name: stats.name,</span><br><span class="line">      action: action,</span><br><span class="line">      time: stats.time,</span><br><span class="line">      hash: stats.hash,</span><br><span class="line">      warnings: stats.warnings || [],</span><br><span class="line">      errors: stats.errors || [],</span><br><span class="line">      modules: buildModuleMap(stats.modules)</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>首先通过 extractBundles 函数把 statsResult 中的模块进行数组化，然后遍历数组中每个更新的模块 publish 到浏览器端。</p>
+<h3 id="生产环境"><a href="#生产环境" class="headerlink" title="生产环境"></a>生产环境</h3><h4 id="配置CommonsChunkPlugin"><a href="#配置CommonsChunkPlugin" class="headerlink" title="配置CommonsChunkPlugin"></a>配置CommonsChunkPlugin</h4><p>CommonsChunkPlugin插件的功能是在多入口的情况下将打包过程中的公共模块抽离到一个独立的文件，以减小最后 bundle 文件的体积。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">plugins: [</span><br><span class="line">  <span class="keyword">new</span> webpack.optimize.CommonsChunkPlugin(&#123;</span><br><span class="line">    name: <span class="string">'vendor'</span>,</span><br><span class="line">    minChunks: <span class="function"><span class="keyword">function</span> (<span class="params">module, count</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> (</span><br><span class="line">        <span class="built_in">module</span>.resource &amp;&amp;</span><br><span class="line">        /\.js$/.test(<span class="built_in">module</span>.resource) &amp;&amp;</span><br><span class="line">        <span class="built_in">module</span>.resource.indexOf(</span><br><span class="line">          path.join(__dirname, <span class="string">'../node_modules'</span>)</span><br><span class="line">        ) === <span class="number">0</span></span><br><span class="line">      )</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">	<span class="comment">//将node_module里所有的模块都提取到vendor.js中</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h4 id="加速文件搜索"><a href="#加速文件搜索" class="headerlink" title="加速文件搜索"></a>加速文件搜索</h4><h5 id="配置-resolve-modules"><a href="#配置-resolve-modules" class="headerlink" title="配置 resolve.modules"></a>配置 resolve.modules</h5><p>Webpack的 resolve.modules 配置模块库（即 node_modules）所在的位置，在 js 里出现类似 import ‘vue’ 这样即不是相对也不是绝对路径的写法时，会去 node_modules 目录下找。但是默认的配置，会采用向上递归搜索的方式去寻找，但通常项目目录里只有一个 node_modules，且是在项目根目录，为了减少搜索范围，可以直接写明 node_modules 的全路径， src 目录同理；</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">resolve</span> (<span class="params">dir</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> path.join(__dirname, <span class="string">'..'</span>, dir)</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  resolve: &#123;</span><br><span class="line">    extensions: [<span class="string">'.js'</span>, <span class="string">'.vue'</span>, <span class="string">'.json'</span>],</span><br><span class="line">    modules: [</span><br><span class="line">      resolve(<span class="string">'src'</span>),</span><br><span class="line">      resolve(<span class="string">'node_modules'</span>)</span><br><span class="line">    ],</span><br><span class="line">    alias: &#123;</span><br><span class="line">      <span class="string">'vue$'</span>: <span class="string">'vue/dist/vue.common.js'</span>,</span><br><span class="line">      <span class="string">'src'</span>: resolve(<span class="string">'src'</span>),</span><br><span class="line">      <span class="string">'assets'</span>: resolve(<span class="string">'src/assets'</span>),</span><br><span class="line">      <span class="string">'components'</span>: resolve(<span class="string">'src/components'</span>),</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">      <span class="string">'store'</span>: resolve(<span class="string">'src/store'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="设置-test-amp-include-amp-exclude"><a href="#设置-test-amp-include-amp-exclude" class="headerlink" title="设置 test &amp; include &amp; exclude"></a>设置 test &amp; include &amp; exclude</h5><p>对于include，更精确指定要处理的目录，这可以减少不必要的遍历，从而减少性能损失。同样，对于已经明确知道的，不需要处理的目录，则应该予以排除，从而进一步提升性能。假设你有一个第三方组件的引用，它肯定位于 node_modules，通常它将有一个 src 和一个 dist 目录。如果配置 Webpack 来排除 node_modules，那么它将从 dist 已经编译的目录中获取文件。否则会再次编译它们。故而，合理的设置 include &amp; exclude，将会极大地提升 Webpack 打包优化速度</p>
+<h4 id="使用并行压缩插件-webpack-parallel-uglify-plugin"><a href="#使用并行压缩插件-webpack-parallel-uglify-plugin" class="headerlink" title="使用并行压缩插件 webpack-parallel-uglify-plugin"></a>使用并行压缩插件 webpack-parallel-uglify-plugin</h4><p>webpack自带的js压缩插件是UglifyJsPlugin，该压缩插件是单线程压缩，速度比较慢，webpack-parallel-uglify-plugin 这个插件可以并行运行多个 UglifyJs 插件，充分利用 CPU 资源。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> ParallelUglifyPlugin(&#123;</span><br><span class="line">  uglifyJS:&#123;</span><br><span class="line">    output: &#123;</span><br><span class="line">      comments: <span class="literal">false</span></span><br><span class="line">    &#125;,</span><br><span class="line">    compress: &#123;</span><br><span class="line">      warnings: <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>替换压缩插件前后 wmda 项目的打包时间缩短了8s左右。</p>
+<h4 id="配置externals"><a href="#配置externals" class="headerlink" title="配置externals"></a>配置externals</h4><p>Webpack 可以配置 externals 参数来将依赖的库指向全局变量，从而不再打包这个库，然后用cdn将该库引入至全局。</p>
+<p>例如，项目中 import 了 react 库，此时可以配置 externals 将 react 指向 window.React 这个全局变量，然后用 script 标签将 react.min.js 引入页面保证 window.React 存在。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    externals: &#123;</span><br><span class="line">        <span class="string">'react'</span>: <span class="string">'window.React'</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//其它配置忽略...... </span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这时 webpack 将不再打包 react 库，所以打包速度大幅提升。但是问题没有这么简单，如果此时我们又 import 了一个 react 子库 react-bootstrap 到项目中，会发现 webpack 又把 react 整个库给打包了。</p>
+<p>原因是，打包 react-bootstrap 时，该库依赖了 react 主库，webpack此时不知道这个依赖入口就是 externals 中配置的 react 模块，所以又傻傻的打包了一遍。可能你会说，把 react-bootstrap 这个库也配置到 externals 里不就行了吗？但问题并不是所有的第三方库都提供了用于生产环境的文件，也就是说没有提供 react-bootstrap.min.js 这个文件。</p>
+<p>解决方法就是使用下面说的 DllPlugin 和 DllReferencePlugin 。</p>
+<h4 id="使用DllPlugin和DllReferencePlugin"><a href="#使用DllPlugin和DllReferencePlugin" class="headerlink" title="使用DllPlugin和DllReferencePlugin"></a>使用DllPlugin和DllReferencePlugin</h4><p>dll（动态链接库）是 window 系统中一种常见的思想。<strong>一个 dll 文件，就是一个依赖库，它本身不能运行也不会修改，是给其他模块或者业务代码引用的</strong>。</p>
+<p>DllPlugin 和 DllReferencePlugin 需要配合使用，它们提供了一种用拆分软件包预构建的打包方法。其原理是，将指定的第三方NPM包模块提前构建，然后通过页面引入。这不仅能够使得打包后的公共模块 vendor.js 文件体积大幅度减小，同时，也极大的提高了构建速度。</p>
+<p><strong>webpack.dll.conf.js:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: &#123;</span><br><span class="line">    vendor: [</span><br><span class="line">      <span class="string">'babel-polyfill'</span>,</span><br><span class="line">      <span class="string">'axios'</span>,</span><br><span class="line">      <span class="string">'vue-router'</span>,</span><br><span class="line">      <span class="string">'vuex'</span>,</span><br><span class="line">      <span class="string">'element-ui'</span>,</span><br><span class="line">      <span class="string">'highcharts'</span></span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  output: &#123;</span><br><span class="line">    path: path.resolve(__dirname, <span class="string">'../static/js'</span>),</span><br><span class="line">    filename: <span class="string">'[name].dll.js'</span>,</span><br><span class="line">    library: <span class="string">'[name]_library'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> webpack.DllPlugin(&#123;</span><br><span class="line">      path: path.resolve(<span class="string">'../static'</span>, <span class="string">'[name]-manifest.json'</span>),</span><br><span class="line">      name: <span class="string">'[name]_library'</span></span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="keyword">new</span> webpack.optimize.UglifyJsPlugin(&#123;</span><br><span class="line">      compress: &#123;</span><br><span class="line">        warnings: <span class="literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  ]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><strong>webpack.prod.conf.js:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> webpack.DllReferencePlugin(&#123;</span><br><span class="line">	manifest: <span class="built_in">require</span>(<span class="string">'../static/vendor-manifest.json'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>package.json</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"scripts"</span>: &#123;</span><br><span class="line">	<span class="string">"build:dll"</span>: <span class="string">"webpack --config build/webpack.dll.conf.js"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行npm run build:dll，会在static文件夹中生成<strong>vendor-manifest.json</strong>以及<strong>vendor.dll.js</strong>文件，指定的第三方npm模块就提前构建在了<strong>vendor.dll.js</strong>中，此时在html中引用该文件，再执行npm run build去打包项目，构建的时间经测试将缩短20s左右。打包后dist中的<strong>vendor.js</strong>文件体积也由600+kb缩小至100+kb。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/webpack/" rel="tag"># webpack</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/31/passport初步调研/" rel="next" title="passport调研（百度、京东）">
+                <i class="fa fa-chevron-left"></i> passport调研（百度、京东）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/03/cache_2/" rel="prev" title="浏览器缓存问题补充">
+                浏览器缓存问题补充 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Ztt</p>
+              <p class="site-description motion-element" itemprop="description">记录学习成长</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#webpack相关分享"><span class="nav-number">1.</span> <span class="nav-text">webpack相关分享</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#webpack常规配置"><span class="nav-number">1.1.</span> <span class="nav-text">webpack常规配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#webpack优化攻略"><span class="nav-number">1.2.</span> <span class="nav-text">webpack优化攻略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#开发环境"><span class="nav-number">1.2.1.</span> <span class="nav-text">开发环境</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HMR使用方式"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">HMR使用方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#源码分析"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">源码分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生产环境"><span class="nav-number">1.2.2.</span> <span class="nav-text">生产环境</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#配置CommonsChunkPlugin"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">配置CommonsChunkPlugin</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#加速文件搜索"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">加速文件搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#配置-resolve-modules"><span class="nav-number">1.2.2.2.1.</span> <span class="nav-text">配置 resolve.modules</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#设置-test-amp-include-amp-exclude"><span class="nav-number">1.2.2.2.2.</span> <span class="nav-text">设置 test &amp; include &amp; exclude</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用并行压缩插件-webpack-parallel-uglify-plugin"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">使用并行压缩插件 webpack-parallel-uglify-plugin</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置externals"><span class="nav-number">1.2.2.4.</span> <span class="nav-text">配置externals</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用DllPlugin和DllReferencePlugin"><span class="nav-number">1.2.2.5.</span> <span class="nav-text">使用DllPlugin和DllReferencePlugin</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ztt</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

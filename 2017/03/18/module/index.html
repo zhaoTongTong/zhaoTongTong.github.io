@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="模块化," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言在js的语法中其实是没有模块化这个概念的，但是在前端干的事情越来越多之后，前端js代码已经显得十分臃肿难以管理，且很容易发生命名冲突的问题。这时候就不得不想办法实现模块化开发，使得模块与模块之间互不相扰，每个模块专注干自己的事情。然后在其他需要用到的地方可以简单的引用加载，提高复用开发效率，造轮子。">
+<meta name="keywords" content="模块化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javascript模块化">
+<meta property="og:url" content="http://yoursite.com/2017/03/18/module/index.html">
+<meta property="og:site_name" content="姑凉是程序媛">
+<meta property="og:description" content="前言在js的语法中其实是没有模块化这个概念的，但是在前端干的事情越来越多之后，前端js代码已经显得十分臃肿难以管理，且很容易发生命名冲突的问题。这时候就不得不想办法实现模块化开发，使得模块与模块之间互不相扰，每个模块专注干自己的事情。然后在其他需要用到的地方可以简单的引用加载，提高复用开发效率，造轮子。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/img/module.jpg">
+<meta property="og:updated_time" content="2017-03-18T08:59:07.514Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="javascript模块化">
+<meta name="twitter:description" content="前言在js的语法中其实是没有模块化这个概念的，但是在前端干的事情越来越多之后，前端js代码已经显得十分臃肿难以管理，且很容易发生命名冲突的问题。这时候就不得不想办法实现模块化开发，使得模块与模块之间互不相扰，每个模块专注干自己的事情。然后在其他需要用到的地方可以简单的引用加载，提高复用开发效率，造轮子。">
+<meta name="twitter:image" content="http://yoursite.com/img/module.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/03/18/module/"/>
+
+
+
+
+
+  <title>javascript模块化 | 姑凉是程序媛</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">姑凉是程序媛</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/18/module/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ztt">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="姑凉是程序媛">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">javascript模块化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-18T16:27:12+08:00">
+                2017-03-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在js的语法中其实是没有模块化这个概念的，但是在前端干的事情越来越多之后，前端js代码已经显得十分臃肿难以管理，且很容易发生命名冲突的问题。这时候就不得不想办法实现模块化开发，使得模块与模块之间互不相扰，每个模块专注干自己的事情。然后在其他需要用到的地方可以简单的引用加载，提高复用开发效率，造轮子。</p>
+<a id="more"></a>
+<h3 id="模块的写法"><a href="#模块的写法" class="headerlink" title="模块的写法"></a>模块的写法</h3><h4 id="最简单的模块："><a href="#最简单的模块：" class="headerlink" title="最简单的模块："></a>最简单的模块：</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func1</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> m1 = <span class="number">1</span>;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上这样的函数其实就可以称为一个最简单的模块，它在函数体内做自己的事情。但是这样做显然会污染全局变量，容易造成命名冲突问题。</p>
+<h4 id="用对象包装的模块"><a href="#用对象包装的模块" class="headerlink" title="用对象包装的模块"></a>用对象包装的模块</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> model = &#123;</span><br><span class="line">	m1: <span class="number">1</span>,</span><br><span class="line">	m2: <span class="function"><span class="keyword">function</span> <span class="title">func2</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上将模块包装在一个对象中，这样可以解决命名冲突的问题，但是又有另一个问题：模块外可以访问到模块内部的变量和函数，并且可以随意修改，没有私有成员可言。</p>
+<h4 id="自执行函数"><a href="#自执行函数" class="headerlink" title="自执行函数"></a>自执行函数</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> model = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> m1 = <span class="number">1</span>;</span><br><span class="line">	...</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+<p>这样的写法可以避免全局污染且不会暴露私有成员。这是模块的基本写法，下面介绍模块化现有的几种规范。</p>
+<h3 id="模块化规范"><a href="#模块化规范" class="headerlink" title="模块化规范"></a>模块化规范</h3><p><img src="../../../../img/module.jpg" width="300" align="center"></p>
+<h4 id="commonJS"><a href="#commonJS" class="headerlink" title="commonJS"></a>commonJS</h4><p>conmmonJS是运行在服务器端的模块化规范，也就是node的模块化规范。</p>
+<blockquote>
+<p>示例<br>假如有一个dog模块<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> dog = <span class="built_in">require</span>(<span class="string">"dog"</span>);</span><br><span class="line">dog.say(<span class="string">"wang"</span>);</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>这是commonJS规范的引用模块写法，但是有一个问题，这样引用模块如果在浏览器端执行将会是同步的，也就是说需要等require加载dog模块结束后才会继续执行dog.say();如果在网速不好的情况下，浏览器端向服务器请求加载模块时间太长，浏览器就处于停滞状态，这样显然是不行的。<br>所以之后有了AMD（异步模块定义）的规范来在浏览器端定义和加载模块。典型的库是requirejs。</p>
+<h4 id="AMD"><a href="#AMD" class="headerlink" title="AMD"></a>AMD</h4><blockquote>
+<p>示例<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">define([<span class="string">'cat'</span>, <span class="string">'dog'</span>], <span class="function"><span class="keyword">function</span>(<span class="params">cat, dog</span>)</span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">animal</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		cat.doSomething();</span><br><span class="line">		dog.doSomething();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span>: &#123;<span class="attr">animal</span>: animal&#125;;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>AMD规范定义模块时，提供两个参数，第一个参数是依赖的模块数组，第二个参数是一个回调函数，这个函数会在依赖模块都加载完成后开始执行。依赖模块的加载不会影响define后面代码的进行，是异步的。与AMD规范同存的还有另一种浏览器模块化规范CMD。</p>
+<h4 id="CMD"><a href="#CMD" class="headerlink" title="CMD"></a>CMD</h4><blockquote>
+<p>示例<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="function"><span class="keyword">function</span> (<span class="params">require, exports, module</span>)</span>&#123; </span><br><span class="line">	<span class="keyword">var</span> dog = <span class="built_in">require</span>(<span class="string">"dog"</span>);</span><br><span class="line"> 	<span class="function"><span class="keyword">function</span> <span class="title">wang</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		dog.say(<span class="string">"wang"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"> 	exports = <span class="built_in">module</span>.exports = wang;      <span class="comment">// 导出需要公开的api</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>可以看出来CMD和AMD最大的一个区别就是加载依赖模块的位置，AMD推崇依赖前置，即将函数中需要使用的模块提前写好在数组参数里。而CMD是就近依赖，什么时候需要用到了就require进来。</p>
+<p>看见这句代码exports = module.exports = wang;不得不再提一下exports和module.exports的区别，好长时间一直没搞明白。</p>
+<h4 id="exports-and-modul-exports"><a href="#exports-and-modul-exports" class="headerlink" title="exports and modul.exports"></a>exports and modul.exports</h4><p>首先先看一个js基础问题<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = &#123;<span class="attr">num</span>: <span class="number">1</span>&#125;;</span><br><span class="line"><span class="keyword">var</span> b = a;</span><br><span class="line"><span class="built_in">console</span>.log(a.num)		<span class="comment">//1</span></span><br><span class="line"><span class="built_in">console</span>.log(b.num);		<span class="comment">//1</span></span><br><span class="line">b.num = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(a.num);		<span class="comment">//2</span></span><br><span class="line"><span class="built_in">console</span>.log(b.num);		<span class="comment">//2</span></span><br><span class="line">b = &#123;<span class="attr">num</span>: <span class="number">3</span>&#125;;</span><br><span class="line"><span class="built_in">console</span>.log(a.num);		<span class="comment">//2</span></span><br><span class="line"><span class="built_in">console</span>.log(b.num);		<span class="comment">//3</span></span><br></pre></td></tr></table></figure></p>
+<p>上面这段代码中，定义了a为一个对象，由于对象是引用类型，b=a后b是指向了a的引用，即a、b指向同样的内存区域。此时修改b.num后a.num自然也会随之改变。但当b被另一个对象重写时，b和a的引用断了，a.num值不会改变。<br>明白了这些之后，exports和module.exports就能明白了。<br>实际上，module.exports是一个对象，而exports是module.exports的引用。<br>所以上面CMD定义模块中的exports = module.exports = wang;这个写法就能理解了。当重写module.exports时，exports指向module.exports的引用就断了，需要重新建立引用，即令exports = module.exports；</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/模块化/" rel="tag"># 模块化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/15/talk-about-bfc/" rel="next" title="BFC那些事">
+                <i class="fa fa-chevron-left"></i> BFC那些事
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/19/cross-origin/" rel="prev" title="跨域解决方案总结">
+                跨域解决方案总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Ztt</p>
+              <p class="site-description motion-element" itemprop="description">记录学习成长</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模块的写法"><span class="nav-number">2.</span> <span class="nav-text">模块的写法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#最简单的模块："><span class="nav-number">2.1.</span> <span class="nav-text">最简单的模块：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用对象包装的模块"><span class="nav-number">2.2.</span> <span class="nav-text">用对象包装的模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自执行函数"><span class="nav-number">2.3.</span> <span class="nav-text">自执行函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模块化规范"><span class="nav-number">3.</span> <span class="nav-text">模块化规范</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#commonJS"><span class="nav-number">3.1.</span> <span class="nav-text">commonJS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AMD"><span class="nav-number">3.2.</span> <span class="nav-text">AMD</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CMD"><span class="nav-number">3.3.</span> <span class="nav-text">CMD</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#exports-and-modul-exports"><span class="nav-number">3.4.</span> <span class="nav-text">exports and modul.exports</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ztt</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
